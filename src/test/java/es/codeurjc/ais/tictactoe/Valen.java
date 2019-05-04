@@ -23,12 +23,12 @@ public class Valen {
     }
 
     @Test
-    public void win() {
+    public void empate() {
         /* X O X
            O X O
-           X
+           X O X
          */
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 9; i++) {
             TicTacToeGame.Cell cell = board.getCell(i);
             if (i % 2 == 0) {
                 cell.value = "X";
@@ -36,9 +36,7 @@ public class Valen {
                 cell.value = "O";
             }
         }
-        assertThat(board.checkDraw(), is(false));
-        int[] result = {6, 4, 2};
-        assertThat(board.getCellsIfWinner("X"), is(result));
+        assertThat(board.checkDraw(), is(true));
     }
 
 }
