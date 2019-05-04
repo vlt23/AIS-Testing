@@ -13,13 +13,11 @@ public class Valen {
 
     @Before
     public void setUp() {
-        WebApp.start();
         board = new Board();
     }
 
     @After
     public void shutdown() {
-        WebApp.stop();
     }
 
     @Test
