@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 public class LeiTestUnitario {
 	private Board tablero;
@@ -30,6 +31,7 @@ public class LeiTestUnitario {
 	@Test
 	public void drawTest() {
 		//given
+		//dato dado
 		/* X 0 X
 		 * 0 X X
 		 * 0 X 0
@@ -42,6 +44,6 @@ public class LeiTestUnitario {
 		//when
 		boolean draw=tablero.checkDraw();
 		//then
-		assertThat(tablero.checkDraw(),equals(true));
+		assertThat(draw,is(true));
 	}
 }
