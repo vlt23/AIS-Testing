@@ -1,45 +1,51 @@
 package es.codeurjc.ais.tictactoe;
 
+import es.codeurjc.ais.tictactoe.TicTacToeGame.Event;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.mockito.Mockito.*;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 public class ValenTestDobles {
-
-    Connection connection1, connection2;
-    TicTacToeGame ticTacToeGame;
-
-    Player player1, player2;
-
-    TicTacToeGame.Event event;
+    private TicTacToeGame game;
+    private Connection connection1, connection2;
+    private Player player1, player2;
 
     @Before
     public void setUp() {
+        // given
+        // 1
+        game = new TicTacToeGame();
+        // 2
         connection1 = mock(Connection.class);
         connection2 = mock(Connection.class);
-
-        ticTacToeGame = new TicTacToeGame();
+        // 4
         player1 = new Player(0, "X", "a");
         player2 = new Player(1, "O", "b");
-
-        event = new TicTacToeGame.Event();
-        event.type = TicTacToeGame.EventType.JOIN_GAME;
     }
 
     @Test
-    public void addConnectionTest() {
-        ticTacToeGame.addConnection(connection1);
-        ticTacToeGame.addConnection(connection2);
+    public void TicTacToeGameDoblesTest() {
+        // given
+        Event event = new Event();
+        event.type = TicTacToeGame.EventType.JOIN_GAME;
+        // 3
+        game.addConnection(connection1);
+        game.addConnection(connection2);
 
-        ticTacToeGame.addPlayer(player1);
-        //ticTacToeGame.addPlayer(player2);
+        // when
+        // 5
+        game.addPlayer(player1);
+        game.addPlayer(player2);
 
-        doNothing().when(connection1).sendEvent(TicTacToeGame.EventType.JOIN_GAME, player1);
-        //doNothing().when(connection2).sendEvent(event);
-
-        verify(connection1, times(1)).sendEvent(TicTacToeGame.EventType.JOIN_GAME, player1);
-        //verify(connection2, times(1)).sendEvent(event);
+        // then
+        // 6 and 7
+        verify(connection1, times(2)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
+                argThat(hasItems(player1, player2)));
+        verify(connection2, times(2)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
+                argThat(hasItems(player1, player2)));
     }
 
 }
