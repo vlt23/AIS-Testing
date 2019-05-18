@@ -7,10 +7,12 @@ import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 public class ValenTestDobles {
+
     private TicTacToeGame game;
     private Connection connection1, connection2;
     private Player player1, player2;
@@ -67,6 +69,10 @@ public class ValenTestDobles {
         assertEquals(player1, event);
         reset(connection1);
 
+        /* X O X
+           O X O
+           X
+         */
         for (int i = 0; i < 7; i++) {
             if (game.checkTurn(player1.getId())) {
                 game.mark(i);
@@ -78,7 +84,7 @@ public class ValenTestDobles {
                     assertEquals(player2, event);
                     reset(connection2);
                 }
-            } else {
+            } else {  // player 2
                 game.mark(i);
                 verify(connection1, times(2)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
                         argument.capture());
@@ -89,7 +95,18 @@ public class ValenTestDobles {
             }
 
         }
-        //verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argThat(hasItems(player1, player2)));
+        // 9
+        verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
+        event = argument.getValue();
+        TicTacToeGame.WinnerValue winnerActual = (TicTacToeGame.WinnerValue) event;
+
+        TicTacToeGame.WinnerValue winnerExpected = new TicTacToeGame.WinnerValue();
+        winnerExpected.player = player1;
+        winnerExpected.pos = new int[]{6, 4, 2};
+
+        //assertEquals(winner, event);  // Different object...
+        assertEquals(winnerExpected.player, winnerActual.player);
+        assertThat(winnerExpected.pos, equalTo(winnerActual.pos));
     }
 
 }
