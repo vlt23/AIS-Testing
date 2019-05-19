@@ -84,15 +84,20 @@ public class ValenTestDobles {
             }
         }
         // 9
-        verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
-        eventCaptor = argument.getValue();
-        TicTacToeGame.WinnerValue winnerActual = (TicTacToeGame.WinnerValue) eventCaptor;
-
         TicTacToeGame.WinnerValue winnerExpected = new TicTacToeGame.WinnerValue();
         winnerExpected.player = player1;
         winnerExpected.pos = new int[]{6, 4, 2};
 
+        verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
+        eventCaptor = argument.getValue();
+        TicTacToeGame.WinnerValue winnerActual = (TicTacToeGame.WinnerValue) eventCaptor;
         //assertEquals(winner, eventCaptor);  // Different object...
+        assertEquals(winnerExpected.player, winnerActual.player);
+        assertThat(winnerExpected.pos, equalTo(winnerActual.pos));
+
+        verify(connection2).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
+        eventCaptor = argument.getValue();
+        winnerActual = (TicTacToeGame.WinnerValue) eventCaptor;
         assertEquals(winnerExpected.player, winnerActual.player);
         assertThat(winnerExpected.pos, equalTo(winnerActual.pos));
     }
