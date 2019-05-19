@@ -52,7 +52,7 @@ public class ValenTestDobles {
     }
 
     @Test
-    public void empateDobleTest() {
+    public void winDobleTest() {
         ticTacToeGameDoblesTest();
         // 8
         ArgumentCaptor<Player> argument = ArgumentCaptor.forClass(Player.class);
