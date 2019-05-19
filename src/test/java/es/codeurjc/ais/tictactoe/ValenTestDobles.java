@@ -55,18 +55,18 @@ public class ValenTestDobles {
                 argThat(hasItems(player1, player2)));
 
         // 8
-        // Why times(2) cause test to fail???
-        // But two times(1) is ok???
         verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
                 argument.capture());
         eventCaptor = argument.getValue();
         assertEquals(player1, eventCaptor);
-        verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
-                argument.capture());
-        eventCaptor = argument.getValue();
 
+        verify(connection2, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                argument.capture());
+        eventCaptor = argument.getValue();
         assertEquals(player1, eventCaptor);
+
         reset(connection1);
+        reset(connection2);
     }
 
     @Test
@@ -126,27 +126,40 @@ public class ValenTestDobles {
         assertNull(eventCaptor);
     }
 
-
     private void autoMark(int i, boolean isSetTurn) {
         if (game.checkTurn(player1.getId())) {
             game.mark(i);
             if (isSetTurn) {
-                verify(connection2, times(2)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                verify(connection2, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
                         argument.capture());
                 eventCaptor = argument.getValue();
 
                 assertEquals(player2, eventCaptor);
                 reset(connection2);
+
+                verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                        argument.capture());
+                eventCaptor = argument.getValue();
+
+                assertEquals(player2, eventCaptor);
+                reset(connection1);
             }
         } else {  // player 2
             game.mark(i);
             if (isSetTurn) {
-                verify(connection1, times(2)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
                         argument.capture());
                 eventCaptor = argument.getValue();
 
                 assertEquals(player1, eventCaptor);
                 reset(connection1);
+
+                verify(connection2, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                        argument.capture());
+                eventCaptor = argument.getValue();
+
+                assertEquals(player1, eventCaptor);
+                reset(connection2);
             }
         }
     }
