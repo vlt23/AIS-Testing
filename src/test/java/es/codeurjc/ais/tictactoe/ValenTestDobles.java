@@ -6,8 +6,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
@@ -97,6 +96,31 @@ public class ValenTestDobles {
         assertEquals(winnerExpected.player, winnerActual.player);
         assertThat(winnerExpected.pos, equalTo(winnerActual.pos));
     }
+
+    @Test
+    public void empateDobleTest() {
+        ticTacToeGameDoblesTest();
+        /* X O X
+           O X X
+           O X O
+         */
+        for (int i = 0; i < 5; i++) {
+            autoMark(i, true);
+        }
+        for (int i = 6; i < 9; i++) {
+            autoMark(i, true);
+        }
+        game.mark(5);
+
+        verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
+        eventCaptor = argument.getValue();
+        assertNull(eventCaptor);
+
+        verify(connection2).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
+        eventCaptor = argument.getValue();
+        assertNull(eventCaptor);
+    }
+
 
     private void autoMark(int i, boolean isSetTurn) {
         if (game.checkTurn(player1.getId())) {
