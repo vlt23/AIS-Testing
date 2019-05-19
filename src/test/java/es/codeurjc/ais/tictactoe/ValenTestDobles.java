@@ -17,6 +17,9 @@ public class ValenTestDobles {
     private Connection connection1, connection2;
     private Player player1, player2;
 
+    private ArgumentCaptor<Player> argument;
+    private Object eventCaptor;
+
     @Before
     public void setUp() {
         // given
@@ -28,6 +31,8 @@ public class ValenTestDobles {
         // 4
         player1 = new Player(0, "X", "a");
         player2 = new Player(1, "O", "b");
+
+        argument = ArgumentCaptor.forClass(Player.class);
     }
 
     private void ticTacToeGameDoblesTest() {
@@ -49,64 +54,72 @@ public class ValenTestDobles {
                 argThat(hasItems(player1, player2)));
         verify(connection2, times(2)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
                 argThat(hasItems(player1, player2)));
+
+        // 8
+        // Why times(2) cause test to fail???
+        // But two times(1) is ok???
+        verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                argument.capture());
+        eventCaptor = argument.getValue();
+        assertEquals(player1, eventCaptor);
+        verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                argument.capture());
+        eventCaptor = argument.getValue();
+
+        assertEquals(player1, eventCaptor);
+        reset(connection1);
     }
 
     @Test
     public void winDobleTest() {
         ticTacToeGameDoblesTest();
-        // 8
-        ArgumentCaptor<Player> argument = ArgumentCaptor.forClass(Player.class);
-        // Why times(2) cause test to fail???
-        // But two times(1) is ok???
-        verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
-                argument.capture());
-        Object event = argument.getValue();
-        assertEquals(player1, event);
-        verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
-                argument.capture());
-        event = argument.getValue();
-
-        assertEquals(player1, event);
-        reset(connection1);
-
         /* X O X
            O X O
            X
          */
         for (int i = 0; i < 7; i++) {
-            if (game.checkTurn(player1.getId())) {
-                game.mark(i);
-                if (i != 6) {  // Player 1 win, so no more SET_TURN
-                    verify(connection2, times(2)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
-                            argument.capture());
-                    event = argument.getValue();
-
-                    assertEquals(player2, event);
-                    reset(connection2);
-                }
-            } else {  // player 2
-                game.mark(i);
-                verify(connection1, times(2)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
-                        argument.capture());
-                event = argument.getValue();
-
-                assertEquals(player1, event);
-                reset(connection1);
+            if (i < 6) {
+                autoMark(i, true);
+            } else {
+                autoMark(i, false);
             }
-
         }
         // 9
         verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
-        event = argument.getValue();
-        TicTacToeGame.WinnerValue winnerActual = (TicTacToeGame.WinnerValue) event;
+        eventCaptor = argument.getValue();
+        TicTacToeGame.WinnerValue winnerActual = (TicTacToeGame.WinnerValue) eventCaptor;
 
         TicTacToeGame.WinnerValue winnerExpected = new TicTacToeGame.WinnerValue();
         winnerExpected.player = player1;
         winnerExpected.pos = new int[]{6, 4, 2};
 
-        //assertEquals(winner, event);  // Different object...
+        //assertEquals(winner, eventCaptor);  // Different object...
         assertEquals(winnerExpected.player, winnerActual.player);
         assertThat(winnerExpected.pos, equalTo(winnerActual.pos));
+    }
+
+    private void autoMark(int i, boolean isSetTurn) {
+        if (game.checkTurn(player1.getId())) {
+            game.mark(i);
+            if (isSetTurn) {
+                verify(connection2, times(2)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                        argument.capture());
+                eventCaptor = argument.getValue();
+
+                assertEquals(player2, eventCaptor);
+                reset(connection2);
+            }
+        } else {  // player 2
+            game.mark(i);
+            if (isSetTurn) {
+                verify(connection1, times(2)).sendEvent(eq(TicTacToeGame.EventType.SET_TURN),
+                        argument.capture());
+                eventCaptor = argument.getValue();
+
+                assertEquals(player1, eventCaptor);
+                reset(connection1);
+            }
+        }
     }
 
 }
