@@ -1,9 +1,6 @@
 package es.codeurjc.ais.tictactoe;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -65,12 +62,8 @@ public class LeiTestUnitario {
     	String table="XXXOOXOXO";
         asignarValores(table);
         int[]expectedCells= {0,1,2};
-        //when
-        int[]cellsWinner=tablero.getCellsIfWinner(labelP1);
-        int[]cellsLoser=tablero.getCellsIfWinner(labelP2);
         //then        
-        assertThat(cellsWinner, equalTo(expectedCells));
-        assertThat(cellsLoser,equalTo(null));
+        assertThat(comprobacionDeResultados(labelP1, labelP2, expectedCells, null),is(true));
     }
     //TEST P1 PIERDA Y P2 GANA
     @Test
@@ -83,12 +76,8 @@ public class LeiTestUnitario {
     	String table="OOOXXOXOX";
         asignarValores(table);
         int[]expectedCells= {0,1,2};
-        //when
-        int[]cellsWinner=tablero.getCellsIfWinner(labelP2);
-        int[]cellsLoser=tablero.getCellsIfWinner(labelP1);
         //then        
-        assertThat(cellsWinner, equalTo(expectedCells));
-        assertThat(cellsLoser,equalTo(null));
+        assertThat(comprobacionDeResultados(labelP2, labelP1, expectedCells, null),is(true));
     }
     //P1 AND P2 EMPATE
     @Test
@@ -99,15 +88,11 @@ public class LeiTestUnitario {
          * 0 X X
          * 0 X 0
          * */
-        asignarValores("XOXOXXOXO");
-        //when
-        int[]cellsWinner=tablero.getCellsIfWinner(labelP2);
-        int[]cellsLoser=tablero.getCellsIfWinner(labelP1);
+        asignarValores("XOXOXXOXO");        
         //then        
-        assertThat(cellsWinner, equalTo(null));
-        assertThat(cellsLoser,equalTo(null));
+        assertThat(comprobacionDeResultados(labelP1, labelP2, null, null),is(true));
     }
-    //TEST SI PASO EL MISMO STRING PERO SIN USAR EL LABEL
+    //TEST SI PASO EL MISMO STRING PERO SIN USAR EL LABEL DEL JUGADOR
     @Test
     public void withoutLabelTest() {
     	//given
@@ -118,12 +103,17 @@ public class LeiTestUnitario {
     	String table="OOOXXOXOX";
         asignarValores(table);
         int[]expectedCells= {0,1,2};
-        //when
-        int[]cellsWinner=tablero.getCellsIfWinner("O");
-        int[]cellsLoser=tablero.getCellsIfWinner("X");
         //then        
-        assertThat(cellsWinner, equalTo(expectedCells));
-        assertThat(cellsLoser,equalTo(null));
+        assertThat(comprobacionDeResultados("O", "X", expectedCells, null),is(true));
+    }
+    private boolean comprobacionDeResultados(String labelWinner,String labelLoser,int[]cellsWin,int[]cellsLose) {
+    	//when
+        int[]cellsWinner=tablero.getCellsIfWinner(labelWinner);
+        int[]cellsLoser=tablero.getCellsIfWinner(labelLoser);
+        //then        
+        assertThat(cellsWinner, equalTo(cellsWin));
+        assertThat(cellsLoser,equalTo(cellsLose));
+        return true;
     }
     private void asignarValores(String letras) {
         for (int i = 0; i < letras.length(); i++) {
