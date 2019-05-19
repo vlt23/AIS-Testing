@@ -1,11 +1,11 @@
 package es.codeurjc.ais.tictactoe;
 
-import es.codeurjc.ais.tictactoe.TicTacToeGame.Event;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -36,8 +36,6 @@ public class ValenTestDobles {
 
     private void ticTacToeGameDoblesTest() {
         // given
-        Event event = new Event();
-        event.type = TicTacToeGame.EventType.JOIN_GAME;
         // 3
         game.addConnection(connection1);
         game.addConnection(connection2);
