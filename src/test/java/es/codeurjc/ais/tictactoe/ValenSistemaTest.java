@@ -10,6 +10,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class ValenSistemaTest {
 
     private WebDriver driverLei;
@@ -58,6 +60,28 @@ public class ValenSistemaTest {
         driverLei.findElement(By.id(startBtn)).click();
         driverValen.findElement(By.id(nickname)).sendKeys(player2);
         driverValen.findElement(By.id(startBtn)).click();
+
+        /* X O X
+           O X O
+           X
+         */
+
+        String cell_x = "cell-";
+        for (int i = 0; i < 7; i++) {
+            if (i % 2 == 0) {
+                driverLei.findElement(By.id(cell_x + i)).click();
+            } else {
+                driverValen.findElement(By.id(cell_x + i)).click();
+            }
+        }
+
+        String winMessage = "Lei wins! Valen looses.";
+
+        String leiMessage = driverLei.switchTo().alert().getText();
+        String valenMessage = driverValen.switchTo().alert().getText();
+
+        assertThat(winMessage).isEqualTo(leiMessage);
+        assertThat(winMessage).isEqualTo(valenMessage);
 
         Thread.sleep(5000);
     }
