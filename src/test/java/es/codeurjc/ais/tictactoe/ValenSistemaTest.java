@@ -23,6 +23,8 @@ public class ValenSistemaTest {
     private String nickname = "nickname";
     private String startBtn = "startBtn";
 
+    private String cell_x = "cell-";
+
     @BeforeClass
     public static void setupClass() {
         WebDriverManager.firefoxdriver().setup();
@@ -52,7 +54,9 @@ public class ValenSistemaTest {
     }
 
     @After
-    public void teardown() {
+    public void teardown() throws InterruptedException {
+        Thread.sleep(5000);
+
         if (driver1 != null) {
             driver1.quit();
         }
@@ -62,12 +66,11 @@ public class ValenSistemaTest {
     }
 
     @Test
-    public void player1WinTest() throws InterruptedException {
+    public void player1WinTest() {
         /* X O X
            O X O
            X
          */
-        String cell_x = "cell-";
         for (int i = 0; i < 7; i++) {
             if (i % 2 == 0) {
                 driver1.findElement(By.id(cell_x + i)).click();
@@ -83,8 +86,33 @@ public class ValenSistemaTest {
 
         assertThat(winMessage).isEqualTo(p1Message);
         assertThat(winMessage).isEqualTo(p2Message);
+    }
 
-        Thread.sleep(5000);
+    @Test
+    public void drawTest() {
+        /* X O X
+           O X X
+           O X O
+         */
+        for (int i = 0; i < 5; i++) {
+            // Only one player clicks, the other click is ignored
+            driver1.findElement(By.id(cell_x + i)).click();
+            driver2.findElement(By.id(cell_x + i)).click();
+        }
+        for (int i = 6; i < 9; i++) {
+            // Same
+            driver1.findElement(By.id(cell_x + i)).click();
+            driver2.findElement(By.id(cell_x + i)).click();
+        }
+        driver1.findElement(By.id(cell_x + 5)).click();
+
+        String drawMessage = "Draw!";
+
+        String p1Message = driver1.switchTo().alert().getText();
+        String p2Message = driver2.switchTo().alert().getText();
+
+        assertThat(drawMessage).isEqualTo(p1Message);
+        assertThat(drawMessage).isEqualTo(p2Message);
     }
 
 }
