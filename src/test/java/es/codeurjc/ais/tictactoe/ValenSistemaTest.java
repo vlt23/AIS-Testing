@@ -115,4 +115,27 @@ public class ValenSistemaTest {
         assertThat(drawMessage).isEqualTo(p2Message);
     }
 
+    @Test
+    public void player2WinTest() {
+        /* X O X
+             O X
+             O
+        */
+        for (int i = 0; i < 3; i++) {
+            driver1.findElement(By.id(cell_x + i)).click();
+            driver2.findElement(By.id(cell_x + i)).click();
+        }
+        driver2.findElement(By.id(cell_x + 4)).click();
+        driver1.findElement(By.id(cell_x + 5)).click();
+        driver2.findElement(By.id(cell_x + 7)).click();
+
+        String winMessage = player2 + " wins! " + player1 + " looses.";
+
+        String p1Message = driver1.switchTo().alert().getText();
+        String p2Message = driver2.switchTo().alert().getText();
+
+        assertThat(winMessage).isEqualTo(p1Message);
+        assertThat(winMessage).isEqualTo(p2Message);
+    }
+
 }
