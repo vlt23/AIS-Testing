@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class LeiTestDobles {
+public class LeiDoblesTest {
     private TicTacToeGame game;
     private Connection connection1, connection2;
     private Player player1, player2;

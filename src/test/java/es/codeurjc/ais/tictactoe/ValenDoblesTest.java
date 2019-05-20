@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
-public class ValenTestDobles {
+public class ValenDoblesTest {
 
     private TicTacToeGame game;
     private Connection connection1, connection2;
