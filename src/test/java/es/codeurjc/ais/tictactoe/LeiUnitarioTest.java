@@ -99,10 +99,10 @@ public class LeiUnitarioTest {
     /*@Test
     public void withoutLabelTest() {
         //given
-        /* 0 0 0
-           X X 0
-           X 0 X
-         */
+        // 0 0 0
+        // X X 0
+        // X 0 X
+         
         String table = "OOOXXOXOX";
         asignarValores(table);
         int[] expectedCells = {0, 1, 2};
