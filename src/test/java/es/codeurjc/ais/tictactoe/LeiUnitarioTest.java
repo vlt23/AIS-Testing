@@ -96,7 +96,7 @@ public class LeiUnitarioTest {
     }
 
     //TEST SI PASO EL MISMO STRING PERO SIN USAR EL LABEL DEL JUGADOR
-    @Test
+    /*@Test
     public void withoutLabelTest() {
         //given
         /* 0 0 0
@@ -108,7 +108,7 @@ public class LeiUnitarioTest {
         int[] expectedCells = {0, 1, 2};
         //then        
         assertThat(comprobacionDeResultados("O", "X", expectedCells, null), is(true));
-    }
+    }*/
 
     private boolean comprobacionDeResultados(String labelWinner, String labelLoser, int[] cellsWin, int[] cellsLose) {
         //when
