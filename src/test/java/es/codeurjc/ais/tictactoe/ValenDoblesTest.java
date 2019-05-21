@@ -34,7 +34,7 @@ public class ValenDoblesTest {
         argument = ArgumentCaptor.forClass(Player.class);
     }
 
-    private void ticTacToeGameDoblesTest() {
+    private void ticTacToeGameDoblesFlujo() {
         // given
         // 3
         game.addConnection(connection1);
@@ -73,8 +73,8 @@ public class ValenDoblesTest {
     }
 
     @Test
-    public void winDobleTest() {
-        ticTacToeGameDoblesTest();
+    public void player1WinDobleTest() {
+        ticTacToeGameDoblesFlujo();
         /* X O X
            O X O
            X
@@ -106,8 +106,8 @@ public class ValenDoblesTest {
     }
 
     @Test
-    public void empateDobleTest() {
-        ticTacToeGameDoblesTest();
+    public void drawDobleTest() {
+        ticTacToeGameDoblesFlujo();
         /* X O X
            O X X
            O X O
@@ -118,7 +118,7 @@ public class ValenDoblesTest {
         for (int i = 6; i < 9; i++) {
             autoMark(i, true);
         }
-        game.mark(5);
+        game.mark(5);  // No more SET_TURN
 
         verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
         eventCaptor = argument.getValue();
@@ -127,6 +127,37 @@ public class ValenDoblesTest {
         verify(connection2).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
         eventCaptor = argument.getValue();
         assertNull(eventCaptor);
+    }
+
+    @Test
+    public void player2WinDobleTest() {
+        ticTacToeGameDoblesFlujo();
+        /* X O X
+             O X
+             O
+         */
+        for (int i = 0; i < 3; i++) {
+            autoMark(i, true);
+        }
+        autoMark(4, true);
+        autoMark(5, true);
+        autoMark(7, false);
+
+        TicTacToeGame.WinnerValue winnerExpected = new TicTacToeGame.WinnerValue();
+        winnerExpected.player = player2;
+        winnerExpected.pos = new int[]{1, 4, 7};
+
+        verify(connection1).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
+        eventCaptor = argument.getValue();
+        TicTacToeGame.WinnerValue winnerActual = (TicTacToeGame.WinnerValue) eventCaptor;
+        assertEquals(winnerExpected.player, winnerActual.player);
+        assertThat(winnerExpected.pos, equalTo(winnerActual.pos));
+
+        verify(connection2).sendEvent(eq(TicTacToeGame.EventType.GAME_OVER), argument.capture());
+        eventCaptor = argument.getValue();
+        winnerActual = (TicTacToeGame.WinnerValue) eventCaptor;
+        assertEquals(winnerExpected.player, winnerActual.player);
+        assertThat(winnerExpected.pos, equalTo(winnerActual.pos));
     }
 
     private void autoMark(int i, boolean isSetTurn) {
