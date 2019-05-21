@@ -40,16 +40,21 @@ public class ValenDoblesTest {
         game.addConnection(connection1);
         game.addConnection(connection2);
 
-        // when
-        // 5
-        game.addPlayer(player1);
-        game.addPlayer(player2);
-
-        // then
+        // when and then
+        game.addPlayer(player1);  // 5
         // 6 and 7
-        verify(connection1, times(2)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
+        verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
+                argThat(hasItems(player1)));
+        verify(connection2, times(1)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
+                argThat(hasItems(player1)));
+        reset(connection1);
+        reset(connection2);
+
+        game.addPlayer(player2);  // 5
+        // 6 and 7
+        verify(connection1, times(1)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
                 argThat(hasItems(player1, player2)));
-        verify(connection2, times(2)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
+        verify(connection2, times(1)).sendEvent(eq(TicTacToeGame.EventType.JOIN_GAME),
                 argThat(hasItems(player1, player2)));
 
         // 8
