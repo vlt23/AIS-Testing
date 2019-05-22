@@ -7,9 +7,9 @@ pipeline {
         stage("Preparation") {
             steps {
                 sh "touch dummyFile"
-                sh "rm -r /home/valen/.jenkins/workspace/AIS-Testing_local/*"
-                sh "cp -r /home/valen/Universidad/3curso/2cuatri/AIS/Practicas/AIS-Testing/src/ ./"
-                sh "cp /home/valen/Universidad/3curso/2cuatri/AIS/Practicas/AIS-Testing/pom.xml ./"
+                sh "rm -r /home/valen/.jenkins/workspace/l.chen1.2016-v.lin.2016/*"
+                sh "cp -r /home/valen/ais/l.chen1.2016-v.lin.2016/src ./"
+                sh "cp /home/valen/ais/l.chen1.2016-v.lin.2016/pom.xml ./"
             }
         }
         stage("Test") {
