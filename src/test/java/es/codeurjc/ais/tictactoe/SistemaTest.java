@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,6 +18,8 @@ public class SistemaTest {
 
     private WebDriver driver1;
     private WebDriver driver2;
+
+    private WebDriverWait wait;
 
     private String player1 = "Lei";
     private String player2 = "Valen";
@@ -40,6 +44,7 @@ public class SistemaTest {
     public void setupTest() {
         driver1 = new FirefoxDriver();
         driver2 = new FirefoxDriver();
+        wait = new WebDriverWait(driver1, 5);
 
         // Add connection
         String url = "http://127.0.0.1:8080";
@@ -55,7 +60,7 @@ public class SistemaTest {
 
     @After
     public void teardown() throws InterruptedException {
-        //Thread.sleep(5000);
+        Thread.sleep(1000);
 
         if (driver1 != null) {
             driver1.quit();
@@ -71,6 +76,7 @@ public class SistemaTest {
            O X O
            X
          */
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(cell_x + 0)));
         for (int i = 0; i < 7; i++) {
             if (i % 2 == 0) {
                 driver1.findElement(By.id(cell_x + i)).click();
@@ -94,15 +100,20 @@ public class SistemaTest {
            O X X
            O X O
          */
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(cell_x + 0)));
         for (int i = 0; i < 5; i++) {
-            // Only one player clicks, the other click is ignored
-            driver1.findElement(By.id(cell_x + i)).click();
-            driver2.findElement(By.id(cell_x + i)).click();
+            if (i % 2 == 0) {
+                driver1.findElement(By.id(cell_x + i)).click();
+            } else {
+                driver2.findElement(By.id(cell_x + i)).click();
+            }
         }
         for (int i = 6; i < 9; i++) {
-            // Same
-            driver1.findElement(By.id(cell_x + i)).click();
-            driver2.findElement(By.id(cell_x + i)).click();
+            if (i % 2 == 0) {
+                driver2.findElement(By.id(cell_x + i)).click();
+            } else {
+                driver1.findElement(By.id(cell_x + i)).click();
+            }
         }
         driver1.findElement(By.id(cell_x + 5)).click();
 
@@ -121,9 +132,13 @@ public class SistemaTest {
              O X
              O
         */
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(cell_x + 0)));
         for (int i = 0; i < 3; i++) {
-            driver1.findElement(By.id(cell_x + i)).click();
-            driver2.findElement(By.id(cell_x + i)).click();
+            if (i % 2 == 0) {
+                driver1.findElement(By.id(cell_x + i)).click();
+            } else {
+                driver2.findElement(By.id(cell_x + i)).click();
+            }
         }
         driver2.findElement(By.id(cell_x + 4)).click();
         driver1.findElement(By.id(cell_x + 5)).click();
