@@ -55,7 +55,7 @@ public class SistemaTest {
 
     @After
     public void teardown() throws InterruptedException {
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
 
         if (driver1 != null) {
             driver1.quit();
