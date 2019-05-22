@@ -12,7 +12,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ValenSistemaTest {
+public class SistemaTest {
 
     private WebDriver driver1;
     private WebDriver driver2;

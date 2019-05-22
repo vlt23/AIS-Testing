@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class LeiUnitarioTest {
+public class UnitarioTest {
     private Board tablero;
     private String labelP1;
     private String labelP2;
